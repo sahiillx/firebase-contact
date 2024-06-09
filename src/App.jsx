@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import { FiSearch } from "react-icons/fi";
-import { FaRegUserCircle } from "react-icons/fa";
 
-import { FaRegTrashCan } from "react-icons/fa6";
-import { RiEditCircleLine } from "react-icons/ri";
+import ContactCard from "./components/ContactCard";
+
 
 import { AiFillPlusCircle } from "react-icons/ai";
 import { collection, getDocs } from "firebase/firestore";
@@ -48,21 +47,9 @@ const App = () => {
         <AiFillPlusCircle className="text-white cursor-pointer text-5xl" />
 
       </div>
-      <div className="mt-10">
+      <div className="mt-10 flex flex-col">
         {contacts.map((contact) => (
-          <div key={contact.id} className="bg-yellow flex justify-between items-center p-2 m-2 rounded-lg ">
-            <div className="flex items-center gap-4">
-            <FaRegUserCircle className="text-orange text-4xl"/>
-            <div className="">
-              <h2 className="font-medium">{contact.name}</h2>
-              <p className="text-sm">{contact.email}</p>
-            </div>
-            </div>
-            <div className="flex gap-2">
-              <RiEditCircleLine className="text-2xl "/>
-              <FaRegTrashCan className="text-2xl text-orange" />
-            </div>
-          </div>
+          <ContactCard key={contact.id} contact={contact} />
         ))}
       </div>
     </div>
