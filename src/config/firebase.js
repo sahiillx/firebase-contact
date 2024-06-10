@@ -11,8 +11,8 @@ const firebaseConfig = {
   authDomain: "vite-contact-9d83a.firebaseapp.com",
   projectId: "vite-contact-9d83a",
   storageBucket: "vite-contact-9d83a.appspot.com",
-  messagingSenderId: import.meta.env.MS_ID ,
-  appId: import.meta.env.APP_ID
+  messagingSenderId: import.meta.env.MS_ID,
+  appId: import.meta.env.APP_ID,
 };
 
 // Initialize Firebase
