@@ -8,7 +8,7 @@ const Modal = ({ onClose, isOpen, children }) => {
     <>
       {isOpen && (
         <>
-          <div className="min-h-[250px] max-w-[350px] bg-white p-2 relative z-50 m-auto">
+          <div className="min-h-[300px] max-w-[370px] bg-white p-4 relative z-50 m-auto">
             <div className="flex justify-end ">
               <AiOutlineClose
                 onClick={onClose}

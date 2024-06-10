@@ -3,39 +3,66 @@ import Navbar from "./components/Navbar";
 import { FiSearch } from "react-icons/fi";
 import Modal from "./components/Modal";
 import ContactCard from "./components/ContactCard";
-
+import UpdateContacts from "./components/UpdateContacts";
 import { AiFillPlusCircle } from "react-icons/ai";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, onSnapshot } from "firebase/firestore";
 import { db } from "./config/firebase";
+import useDisclose from "./hooks/useDisclose";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const [contacts, setContacts] = useState([]);
-  const [isOpen, setisOpen] = useState(false);
+  const { onClose, onOpen, isOpen } = useDisclose();
 
-  const onOpen = () => {
-    setisOpen(true);
-  };
-  const onClose = () => {
-    setisOpen(false);
-  };
+
 
   useEffect(() => {
     const getContacts = async () => {
       try {
         const contactsref = collection(db, "contacts");
-        const contactsSnapshot = await getDocs(contactsref);
-        const contactsList = contactsSnapshot.docs.map((doc) => {
-          return {
-            id: doc.id,
-            ...doc.data(),
-          };
+        onSnapshot(contactsref, (snapshot) => {
+          const contactsList = snapshot.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          });
+          setContacts(contactsList);
+          return contactsList;
+
         });
-        setContacts(contactsList);
-      } catch (error) {}
+
+
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     getContacts();
   }, []);
+
+  const filterContacts = (e) => {
+    const value = e.target.value;
+
+    const contactsref = collection(db, "contacts");
+        onSnapshot(contactsref, (snapshot) => {
+          const contactsList = snapshot.docs.map((doc) => {
+            return {
+              id: doc.id,
+              ...doc.data(),
+            };
+          });
+
+          const filteredContacts = contactsList.filter((contact) => 
+            contact.name.toLowerCase().includes(value.toLowerCase())
+          );
+
+          setContacts(filteredContacts);
+          return filteredContacts;
+
+        });
+  }
 
   return (
     <>
@@ -46,6 +73,7 @@ const App = () => {
             <FiSearch className=" ml-2 cursor-pointer text-2xl text-white absolute" />
 
             <input
+            onChange={filterContacts}
               type="text"
               placeholder="Search Contact"
               className=" flex-grow bg-transparent border rounded-md h-10 text-white pl-10 text-l"
@@ -63,9 +91,11 @@ const App = () => {
           ))}
         </div>
       </div>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        Hii I am Modal
-      </Modal>
+      <UpdateContacts isOpen={isOpen} onClose={onClose} />
+      <ToastContainer 
+        autoClose={1500}
+        position="bottom-center"
+      />  
     </>
   );
 };
